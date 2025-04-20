@@ -1,0 +1,50 @@
+{
+  "name": "project-line-counter",
+  "version": "1.0.0",
+  "description": "A simple CLI tool to count lines of code by language.",
+  "main": "dist/index.js",
+  "bin": {
+    "count-lines": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run build",
+    "start": "node dist/index.js",
+    "test": "echo \"No tests yet\" && exit 0",
+    "lint": "eslint . --ext .ts"
+  },
+  "keywords": [
+    "cli",
+    "code-counter",
+    "lines-of-code",
+    "typescript"
+  ],
+  "author": "Your Name <you@example.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/project-line-counter.git"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "type": "module",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "inquirer": "^12.5.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "ts-node": "^10.9.1",
+    "@types/node": "^22.14.1",
+    "@types/inquirer": "^8.2.0",
+    "@types/chalk": "^5.0.2",
+    "eslint": "^8.44.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0"
+  }
+}
