@@ -6,12 +6,13 @@ import chalk from "chalk";
 import inquirer from "inquirer";
 
 // Supported languages and file extensions
-type Language = "All" | "TypeScript" | "JavaScript" | "Python";
+type Language = "All" | "TypeScript" | "JavaScript" | "Python" | "Java";
 const langToExt: Record<Language, string[] | null> = {
   All: null,
   TypeScript: [".ts", ".tsx"],
   JavaScript: [".js", ".jsx"],
   Python: [".py"],
+  Java: [".java"],
 };
 
 // Parse CLI flags (e.g. --typescript, --javascript, etc.)
@@ -27,6 +28,8 @@ function parseFlags(): Language | null {
           return "JavaScript";
         case "python":
           return "Python";
+        case "java":
+          return "Java";
         case "all":
           return "All";
         default:
@@ -58,18 +61,27 @@ function getAllFiles(dir: string, files: string[] = []): string[] {
 function countLines(file: string, ext: string): number {
   let content = fs.readFileSync(file, "utf8");
 
-  // JavaScript/TypeScript: remove block comments and filter out single-line comments
-  if ([".js", ".jsx", ".ts", ".tsx"].includes(ext)) {
+  // JavaScript/TypeScript/Java: remove block comments and filter out single-line comments
+  if ([".js", ".jsx", ".ts", ".tsx", ".java"].includes(ext)) {
     // strip multiline comments
     content = content.replace(/\/\*[\s\S]*?\*\//g, "");
     const lines = content.split("\n");
-    return lines.filter((line) => !line.trim().startsWith("//")).length;
+
+    return lines.filter((line) => {
+      const trimmed = line.trim();
+      return trimmed && !trimmed.startsWith("//");
+    }).length;
   }
 
   // Python: filter out lines starting with '#'
   if (ext === ".py") {
+    content = content.replace(/(^\s*(?!.*=\s*)('{3}|"{3})[\s\S]*?\2)/gm, "");
+
     const lines = content.split("\n");
-    return lines.filter((line) => !line.trim().startsWith("#")).length;
+    return lines.filter((line) => {
+      const trimmed = line.trim();
+      return trimmed && !trimmed.startsWith("#");
+    }).length;
   }
 
   // Default: count all lines

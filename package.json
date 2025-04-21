@@ -42,7 +42,6 @@
     "ts-node": "^10.9.1",
     "@types/node": "^22.14.1",
     "@types/inquirer": "^8.2.0",
-    "@types/chalk": "^5.0.2",
     "eslint": "^8.44.0",
     "@typescript-eslint/parser": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0"
