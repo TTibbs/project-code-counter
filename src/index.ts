@@ -3,11 +3,11 @@
 import fs from "fs";
 import path from "path";
 import chalk from "chalk";
-import inquirer from "inquirer";
+import { select } from "@inquirer/prompts";
 
 // Supported languages and file extensions
-type Language = "All" | "TypeScript" | "JavaScript" | "Python";
-const langToExt: Record<Language, string[] | null> = {
+export type Language = "All" | "TypeScript" | "JavaScript" | "Python";
+export const langToExt: Record<Language, string[] | null> = {
   All: null,
   TypeScript: [".ts", ".tsx"],
   JavaScript: [".js", ".jsx"],
@@ -15,7 +15,7 @@ const langToExt: Record<Language, string[] | null> = {
 };
 
 // Parse CLI flags (e.g. --typescript, --javascript, etc.)
-function parseFlags(): Language | null {
+export function parseFlags(): Language | null {
   const args = process.argv.slice(2);
   for (const arg of args) {
     if (arg.startsWith("--")) {
@@ -39,7 +39,7 @@ function parseFlags(): Language | null {
 }
 
 // Recursively gather files, ignoring node_modules and hidden folders
-function getAllFiles(dir: string, files: string[] = []): string[] {
+export function getAllFiles(dir: string, files: string[] = []): string[] {
   const entries = fs.readdirSync(dir);
   for (const entry of entries) {
     if (entry === "node_modules" || entry.startsWith(".")) continue;
@@ -55,21 +55,22 @@ function getAllFiles(dir: string, files: string[] = []): string[] {
 }
 
 // Count lines in a single file, ignoring comment lines based on extension
-function countLines(file: string, ext: string): number {
+export function countLines(file: string, ext: string): number {
   let content = fs.readFileSync(file, "utf8");
 
   // JavaScript/TypeScript: remove block comments and filter out single-line comments
   if ([".js", ".jsx", ".ts", ".tsx"].includes(ext)) {
-    // strip multiline comments
     content = content.replace(/\/\*[\s\S]*?\*\//g, "");
-    const lines = content.split("\n");
-    return lines.filter((line) => !line.trim().startsWith("//")).length;
+    return content.split("\n").filter((line) => !line.trim().startsWith("//"))
+      .length;
   }
 
   // Python: filter out lines starting with '#'
   if (ext === ".py") {
-    const lines = content.split("\n");
-    return lines.filter((line) => !line.trim().startsWith("#")).length;
+    return fs
+      .readFileSync(file, "utf8")
+      .split("\n")
+      .filter((line) => !line.trim().startsWith("#")).length;
   }
 
   // Default: count all lines
@@ -77,8 +78,7 @@ function countLines(file: string, ext: string): number {
 }
 
 // Perform the line counting based on selected extensions
-type MainContext = { flagLang: Language | null };
-function performCount(exts: string[] | null): void {
+export function performCount(exts: string[] | null): void {
   const startDir = process.cwd();
   const files = getAllFiles(startDir);
   let total = 0;
@@ -101,27 +101,23 @@ function performCount(exts: string[] | null): void {
   console.log(chalk.yellow(`• Total lines of code: ${total}\n`));
 }
 
-// Interactive prompt flow
-async function interactiveFlow(): Promise<void> {
+// Interactive prompt flow using @inquirer/prompts
+export async function interactiveFlow(): Promise<void> {
   console.log(chalk.cyan.bold("Welcome to Count-Lines!"));
   console.log(chalk.gray("Let's count your lines of code interactively.\n"));
 
-  const { language } = await inquirer.prompt<{ language: Language }>([
-    {
-      type: "list",
-      name: "language",
-      message: "Select a language to count (or All):",
-      choices: Object.keys(langToExt) as Language[],
-      default: "All",
-    },
-  ]);
+  const language = (await select<Language>({
+    message: "Select a language to count (or All):",
+    choices: Object.keys(langToExt) as Language[],
+    default: Object.keys(langToExt).indexOf("All"),
+  })) as Language;
 
   console.log(chalk.magenta(`\nCounting ${language} files...`));
   performCount(langToExt[language]);
 }
 
 // Main entry
-(async function main() {
+export async function main() {
   const flagLang = parseFlags();
   if (flagLang) {
     console.log(chalk.magenta(`\nCounting ${flagLang} files...`));
@@ -129,7 +125,8 @@ async function interactiveFlow(): Promise<void> {
   } else {
     await interactiveFlow();
   }
-})().catch((err: unknown) => {
+}
+main().catch((err: unknown) => {
   console.error(chalk.red("Error:"), err);
   process.exit(1);
 });

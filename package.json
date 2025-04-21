@@ -14,7 +14,8 @@
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run build",
     "start": "node dist/index.js",
-    "test": "echo \"No tests yet\" && exit 0",
+    "test": "jest",
+    "test:verbose": "jest --verbose",
     "lint": "eslint . --ext .ts"
   },
   "keywords": [
@@ -34,17 +35,26 @@
   },
   "type": "module",
   "dependencies": {
-    "chalk": "^5.4.1",
-    "inquirer": "^12.5.2"
+    "@inquirer/prompts": "^7.4.1",
+    "chalk": "^5.4.1"
   },
   "devDependencies": {
-    "typescript": "^5.8.3",
-    "ts-node": "^10.9.1",
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.14.1",
-    "@types/inquirer": "^8.2.0",
-    "@types/chalk": "^5.0.2",
-    "eslint": "^8.44.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.0.0"
+    "eslint": "^8.44.0",
+    "jest": "^29.7.0",
+    "jest-extended": "^4.0.2",
+    "ts-jest": "^29.3.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.8.3"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "jest-extended/all"
+    ]
   }
 }
