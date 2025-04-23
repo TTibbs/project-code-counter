@@ -1,6 +1,6 @@
 {
   "name": "project-line-counter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple CLI tool to count lines of code by language.",
   "main": "dist/index.js",
   "bin": {
@@ -24,11 +24,11 @@
     "lines-of-code",
     "typescript"
   ],
-  "author": "Your Name <you@example.com>",
+  "author": "TTibbs <wtibbs@proton.me>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/project-line-counter.git"
+    "url": "https://github.com/TTibbs/project-line-counter.git"
   },
   "engines": {
     "node": ">=14"
