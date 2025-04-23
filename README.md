@@ -63,7 +63,7 @@ We welcome contributions to Count-Lines! Here's how you can help:
 2. Clone your fork to your local machine:
 
 ```bash
-git clone https://github.com/TTibbs/project-code-counter
+git clone https://github.com/TTibbs/project-line-counter
 ```
 
 3. Install dependencies:

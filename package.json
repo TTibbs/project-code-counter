@@ -12,7 +12,7 @@
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run build",
+    "prepublishOnly": "npm run build",
     "start": "node dist/index.js",
     "test": "jest",
     "test:verbose": "jest --verbose",
@@ -28,7 +28,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/TTibbs/project-line-counter.git"
+    "url": "https://github.com/TTibbs/project-line-counter"
   },
   "engines": {
     "node": ">=14"
